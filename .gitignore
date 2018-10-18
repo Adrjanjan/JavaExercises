@@ -1,0 +1,15 @@
+
+.idea/
+tests/
+_windows/
+codestyles/
+fileTemplates/
+baseRefactoring.xml
+colors.scheme.xml
+debugger.xml
+editor.xml
+filetypes.xml
+find.xml
+github_settings.xml
+ui.lnf.xml
+JavaExercises.iml
