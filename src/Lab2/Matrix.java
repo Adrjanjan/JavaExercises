@@ -12,7 +12,6 @@ public class Matrix {
         this.cols = cols;
         data = new double[rows * cols];
     }
-
     Matrix(double[][] d){
         rows = d.length;
         int max =0;
@@ -29,7 +28,7 @@ public class Matrix {
     double[][] asArray(){
         double[][] twoD = new double[rows][cols];
         for(int i=0; i<rows; ++i){
-            if (cols >= 0) System.arraycopy(data, i * cols + 0, twoD[i], 0, cols);
+            if (cols >= 0) System.arraycopy(data, i * cols, twoD[i], 0, cols);
         }
 
         return twoD;
@@ -86,11 +85,11 @@ public class Matrix {
         }
         return temp;
     }
-
-    Matrix sub(Matrix m){
-        return this.add(m.mul(-1));
+    Matrix sub(Matrix m) {
+        return this.
+                add(m.mul(-1));
     }
-    Matrix mul(Matrix m){
+    Matrix mul(Matrix m) {
         if (rows != m.rows || cols != m.cols)
             throw new ArrayIndexOutOfBoundsException("Matrices are not in the same shape");
 
@@ -111,26 +110,26 @@ public class Matrix {
         return temp;
     }
 
-    Matrix add(double w){
+    Matrix add(double w) {
         Matrix temp = new Matrix(rows, cols);
         for(int i=0; i< data.length; ++i){
             temp.data[i] = data[i] + w;
         }
         return temp;
     }
-    Matrix sub(double w){
+    Matrix sub(double w) {
         Matrix temp = new Matrix(rows, cols);
         for(int i=0; i< data.length; ++i){
             temp.data[i] = data[i] - w;
         }
         return temp;
     }
-    Matrix mul(double w){Matrix temp = new Matrix(rows, cols);
+    Matrix mul(double w) {Matrix temp = new Matrix(rows, cols);
         for(int i=0; i< data.length; ++i){
             temp.data[i] = data[i] * w;
         }
         return temp;}
-    Matrix div(double w){Matrix temp = new Matrix(rows, cols);
+    Matrix div(double w) {Matrix temp = new Matrix(rows, cols);
         for(int i=0; i< data.length; ++i){
             temp.data[i] = data[i] / w;
         }
@@ -157,10 +156,8 @@ public class Matrix {
     double frobenius(){
         double temp = 0;
 
-        for(int i=0; i< rows; ++i){
-            for(int j=0; j< cols; ++j){
-                temp += get(i,j) * get(i, j);
-            }
+        for (double d : data) {
+            temp += d * d;
         }
         return Math.sqrt(temp);
     }
