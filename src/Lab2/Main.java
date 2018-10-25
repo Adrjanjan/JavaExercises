@@ -2,16 +2,14 @@ package Lab2;
 
 import java.util.Arrays;
 
-public class MatrixTest {
+public class Main {
 
     public static void main(String[] args) throws Exception {
-        //testMatrix();
-        //testAdd();
 
-        Matrix m = new Matrix(new double[][]{{1,2,3,4},{5,6},{7,8},{9}});
+        Matrix m = new Matrix(new double[][]{{1,2},{3,4},{5,6},{7, 8}});
 
         System.out.println(m);
-        int a=2, b=8;
+        int a=4, b=2;
         m.reshape(a, b);
 
         System.out.println(Arrays.deepToString(m.asArray()));
@@ -28,8 +26,7 @@ public class MatrixTest {
         System.out.println(m.mul(d));
         System.out.println(m.div(d));
 
-        m.reshape(4,4);
-        System.out.println(m.dot(m));
+        System.out.println(m.reshape(4,4).dot(m));
 
         System.out.println(m.add(m));
         System.out.println(m.sub(m));

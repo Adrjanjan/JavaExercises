@@ -29,7 +29,7 @@ public class Matrix {
     double[][] asArray(){
         double[][] twoD = new double[rows][cols];
         for(int i=0; i<rows; ++i){
-            if (cols >= 0) System.arraycopy(data, i * rows, twoD[i], 0, cols);
+            if (cols >= 0) System.arraycopy(data, i * cols + 0, twoD[i], 0, cols);
         }
 
         return twoD;
@@ -37,34 +37,39 @@ public class Matrix {
 
     double get(int r,int c) throws ArrayIndexOutOfBoundsException{
         if (r >= rows || c >= cols) throw new ArrayIndexOutOfBoundsException("To big rows or cols:" + "\nRows: " + rows + "\nCols: " + cols);
-        return data[r * rows + c];
+        return data[r * cols + c];
     }
     void set (int r,int c, double value)throws ArrayIndexOutOfBoundsException{
         if (r >= rows || c >= cols) throw new ArrayIndexOutOfBoundsException("To big rows or cols:" + "\nRows: " + rows + "\nCols: " + cols);
-        data[r * rows + c] = value;
+        data[r * cols + c] = value;
     }
 
-    public String toString(){
+    public String toString() {
         StringBuilder buf = new StringBuilder();
         buf.append("[");
-        for(int i=0;i<rows;i++){
+
+        for (int i = 0; i < rows; ++i) {
             buf.append("[");
-            for(int j=0; j<cols; ++j){
-                buf.append(data[i * rows + j]).append(", ");
+
+            for (int j = 0; j < cols; ++j) {
+                if(j != 0) buf.append(", ");
+                buf.append(Double.toString(data[i * cols + j]));
             }
-            buf.replace(buf.length()-1, buf.length()-1, "],\n");
+            buf.append("]");
+            if( i!= rows -1) buf.append(",\n");
         }
-        buf.replace(buf.length()-3, buf.length(), "]\n");
-        //buf.replace(buf.length()-1, buf.length()-1, "]]");
+        buf.append("]");
         return buf.toString();
     }
 
-    void reshape(int newRows,int newCols) throws Exception {
+    Matrix reshape(int newRows,int newCols) throws Exception {
         if (rows * cols != newRows * newCols)
             throw new Exception(String.format("%d x %d matrix can't be reshaped to %d x %d", rows, cols, newRows, newCols));
 
         rows = newRows;
         cols = newCols;
+
+        return this;
     }
 
     int[] shape(){
