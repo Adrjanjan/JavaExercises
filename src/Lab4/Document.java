@@ -58,20 +58,25 @@ public class Document {
         return this;
     }
 
-    public Section addSection(String sectionTitle){
-        Section section = new Section(sectionTitle);
+    public Section addSection(String sectionTitle, int h_lvl){
+        Section section = new Section(sectionTitle, h_lvl);
         sections.add(section);
         return section;
     }
 
     //TODO
     void writeHTML(PrintStream out){
-        out.printf("<h1>%s</h1>\n", title);
+        out.print("<html>\n\t<head>\n");
+        out.printf("\t\t<title>%s</title>\n", title);
+        out.println("\t</head>\n\t<body>");
+        out.printf("\t\t<h1>%s</h1>\n\t\t<div class=\"face\">\n\t\t\t", title);
         photo.writeHTML(out);
+        out.print("\t\t</div>\n");
         for (Section sect:sections) {
+            out.print('\t');
             sect.writeHTML(out);
         }
-
+        out.print("\t</body>\n</html>\n");
     }
 
 }

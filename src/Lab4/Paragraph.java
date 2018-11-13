@@ -9,9 +9,7 @@ public class Paragraph {
         this.content = paragraphText;
     }
 
-    public Paragraph() {
-
-    }
+    public Paragraph() {}
 
     public Paragraph setContent(String content) {
         this.content = content;
@@ -20,7 +18,7 @@ public class Paragraph {
 
     //TODO
     public void writeHTML(PrintStream out){
-
+        out.printf("<div>%s</div>\n", content);
     }
 
 }

@@ -21,5 +21,4 @@ public class Photo {
         out.printf("<img src=\"%s\" alt=\"CV Photo\" height=\"42\" width=\"42\"/>\n",url);
     }
 
-
 }

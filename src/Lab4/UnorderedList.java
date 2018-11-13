@@ -10,16 +10,22 @@ public class UnorderedList {
 
     public UnorderedList() {}
 
-    void addItem(ListItem item){
+    UnorderedList addItem(ListItem item){
         this.items.add(item);
+        return this;
+    }
+
+    UnorderedList addItem(String item){
+        this.items.add(new ListItem(item));
+        return this;
     }
 
     public void writeHTML(PrintStream out){
-        out.print("<ul>\n");
+        out.print("\t<ul>\n");
         for (ListItem item : items) {
             item.writeHTML(out);
         }
-        out.print("</ul>\n");
+        out.print("\t</ul>");
     }
 
 }

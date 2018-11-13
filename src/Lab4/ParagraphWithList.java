@@ -3,7 +3,7 @@ package Lab4;
 import java.io.PrintStream;
 
 public class ParagraphWithList extends Paragraph{
-    UnorderedList list = new UnorderedList();
+    private UnorderedList list = new UnorderedList();
 
     public ParagraphWithList() {
         super();
@@ -26,11 +26,9 @@ public class ParagraphWithList extends Paragraph{
     }
 
     public void writeHTML(PrintStream out){
-        out.print("<p>\n");
-        super.writeHTML(out);
-        out.print("<br />\n");
+        out.print("\t\t<br />\n");
         list.writeHTML(out);
-        out.print("</p>\n");
+        out.print("\t\t\n");
     }
 
 }
