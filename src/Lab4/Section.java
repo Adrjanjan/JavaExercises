@@ -24,7 +24,6 @@ public class Section {
         return this;
     }
 
-    //TODO przekazywać poziom zagłębienia do znaczników <h_>
     void writeHTML(PrintStream out){
         out.printf("\t<h%d>%s</h%d>\n\t\t<div class=\"section\">\n", h_lvl, title, h_lvl);
         for (Paragraph item : paragraphs) {

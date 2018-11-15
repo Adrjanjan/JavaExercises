@@ -64,7 +64,6 @@ public class Document {
         return section;
     }
 
-    //TODO
     void writeHTML(PrintStream out){
         out.print("<html>\n\t<head>\n");
         out.printf("\t\t<title>%s</title>\n", title);

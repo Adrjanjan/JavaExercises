@@ -16,7 +16,6 @@ public class Paragraph {
         return this;
     }
 
-    //TODO
     public void writeHTML(PrintStream out){
         out.printf("<div>%s</div>\n", content);
     }
