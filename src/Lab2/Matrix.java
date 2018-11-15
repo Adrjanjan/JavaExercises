@@ -162,4 +162,15 @@ public class Matrix {
         return Math.sqrt(temp);
     }
 
+
+    //KARTKÓWKA GR A
+
+    Matrix getColumn(int n){
+        Matrix m = new Matrix(1, rows);
+
+        for(int i=0; i<rows; i++)
+            m.set(0, i, data[n + i * rows]);
+
+        return m;
+    }
 }

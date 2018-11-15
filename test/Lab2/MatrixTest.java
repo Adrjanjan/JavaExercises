@@ -1,5 +1,9 @@
 package Lab2;
 
+import org.junit.Test;
+
+import java.util.Arrays;
+
 import static org.junit.Assert.*;
 
 public class MatrixTest {
@@ -143,4 +147,47 @@ public class MatrixTest {
         m = new Matrix(exp);
         assertEquals(5, m.frobenius(), 0.1 );
     }
+
+    @Test
+    public void getColumn() {
+        Matrix m = new Matrix(new double[][]{{1,2,3},{4,5,6},{7,8,9}});
+        Matrix col = m.getColumn(0);
+        Matrix m1 = new Matrix(1, m.shape()[0]);
+        m1.set(0, 0, 1);
+        m1.set(0, 1, 4);
+        m1.set(0, 2, 7);
+
+
+        System.out.print(Arrays.deepToString(col.asArray()));
+
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
