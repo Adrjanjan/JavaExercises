@@ -6,6 +6,7 @@ public class Variable extends Node {
 
     public Variable(String name) {
         this.name = name;
+        this.value = 0.0;
     }
 
     public Variable(String name, Double value) {
@@ -13,7 +14,7 @@ public class Variable extends Node {
         this.value = value;
     }
 
-    public void setValue(Double value) {
+    void setValue(Double value) {
         this.value = value;
     }
 
@@ -30,6 +31,9 @@ public class Variable extends Node {
 
     @Override
     public Node diff(Variable var) {
-        return new Constant(1.0);
+        if (var.name.equals(name))
+            return new Constant((double) sign);
+        else
+            return new Constant(0.0);
     }
 }

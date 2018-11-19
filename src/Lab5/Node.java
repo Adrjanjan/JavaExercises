@@ -17,7 +17,6 @@ abstract public class Node {
         return sign;
     }
 
-
     abstract public double evaluate();
 
     @Override

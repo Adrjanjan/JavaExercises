@@ -7,19 +7,24 @@ import java.util.Locale;
 public class Constant extends Node {
     private Double value;
 
-    public Constant(Double value) {
-        this.sign = value<0?-1:1;
-        this.value = value<0?-value:value;
+    Constant(Double value) {
+        this.value = Math.abs(value);
+        this.sign = value < 0 ? -1 : 1;
     }
 
     @Override
     public double evaluate() {
-        return sign*value;
+        return value * sign;
+    }
+
+    @Override
+    int getSign() {
+        return sign;
     }
 
     @Override
     public String toString() {
-        DecimalFormat format = new DecimalFormat("0.#####",new DecimalFormatSymbols(Locale.US));
+        DecimalFormat format = new DecimalFormat("0.#####", new DecimalFormatSymbols(Locale.US));
         return format.format(value);
     }
 
