@@ -1,5 +1,8 @@
 package Lab4;
 
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+
 public class CV {
 
     public static void main(String[] args) {
@@ -20,6 +23,12 @@ public class CV {
                 );
 
         cv.writeHTML(System.out);
+        try {
+            cv.writeHTML(new PrintStream("cv.txt"));
+        } catch (FileNotFoundException e) {
+            System.out.println("File not fount :C.");
+        }
+
 
         Document cv2 = new Document();
         cv2.addPhoto("abc.jpg");
