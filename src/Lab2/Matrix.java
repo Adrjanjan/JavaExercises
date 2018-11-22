@@ -12,6 +12,7 @@ public class Matrix {
         this.cols = cols;
         data = new double[rows * cols];
     }
+
     Matrix(double[][] d){
         rows = d.length;
         int max =0;
@@ -38,6 +39,7 @@ public class Matrix {
         if (r >= rows || c >= cols) throw new ArrayIndexOutOfBoundsException("To big rows or cols:" + "\nRows: " + rows + "\nCols: " + cols);
         return data[r * cols + c];
     }
+
     void set (int r,int c, double value)throws ArrayIndexOutOfBoundsException{
         if (r >= rows || c >= cols) throw new ArrayIndexOutOfBoundsException("To big rows or cols:" + "\nRows: " + rows + "\nCols: " + cols);
         data[r * cols + c] = value;
@@ -164,13 +166,12 @@ public class Matrix {
 
 
     //KARTKÓWKA GR A
-
+    //TODO
     Matrix getColumn(int n){
-        Matrix m = new Matrix(1, rows);
+        Matrix m = new Matrix(rows, 1);
 
         for(int i=0; i<rows; i++)
-            m.set(0, i, data[n + i * rows]);
-
+            m.set(i, 0, get(i, n));
         return m;
     }
 }
