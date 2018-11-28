@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.Function;
 
 import static org.junit.Assert.*;
 
@@ -180,15 +180,17 @@ public class CSVReaderTest {
         assertEquals("\"Jakiś,String,z,przecinkami,w,cudzysłowach\"", sixth);
     }
 
+    private CSVReader reader;
+
     @Test
     public void titanicTest() {
         class Passenger {
-            Integer PassengerId, Survived, Pclass;
-            String Name, Sex;
-            Integer Age, SibSp, Parch;
-            String Ticket;
-            Double Fare;
-            String Cabin, Embarked;
+            private Integer PassengerId, Survived, Pclass;
+            private String Name, Sex;
+            private Integer Age, SibSp, Parch;
+            private String Ticket;
+            private Double Fare;
+            private String Cabin, Embarked;
 
             Passenger(Integer passengerId, Integer survived, Integer pclass, String name, String sex, Integer age, Integer sibSp, Integer parch, String ticket, Double fare, String cabin, String embarked) {
                 PassengerId = passengerId;
@@ -203,9 +205,6 @@ public class CSVReaderTest {
                 Fare = fare;
                 Cabin = cabin;
                 Embarked = embarked;
-            }
-
-            public Passenger() {
             }
 
             @Override
@@ -227,23 +226,35 @@ public class CSVReaderTest {
             }
         }
 
-        CSVReader reader = null;
+        reader = null;
         try {
             reader = new CSVReader("titanic-part.csv", ",", true);
         } catch (IOException e) {
             e.printStackTrace();
             fail("IO Exception - can't open file!");
         }
-        ArrayList<Passenger> passengers = new ArrayList<>();
-        Passenger tmp = null;
+        Passenger passenger;
+
         while (reader.next()) {
-
-            tmp = new Passenger(reader.getIfOk(reader::getInt, 0),
-                    reader.getIfOk(reader::getInt, 1),
-                    reader.getIfOk(reader::getInt, 2),
-                    reader.getIfOk(reader::get, 2)),
-            )
+            passenger = new Passenger(getIfOk(reader::getInt, 0),
+                    getIfOk(reader::getInt, 1),
+                    getIfOk(reader::getInt, 2),
+                    getIfOk(reader::get, 3),
+                    getIfOk(reader::get, 4),
+                    getIfOk(reader::getInt, 5),
+                    getIfOk(reader::getInt, 6),
+                    getIfOk(reader::getInt, 7),
+                    getIfOk(reader::get, 8),
+                    getIfOk(reader::getDouble, 9),
+                    getIfOk(reader::get, 10),
+                    getIfOk(reader::get, 11));
+            System.out.println(passenger);
         }
+    }
 
+    private <T> T getIfOk(Function<Integer, T> function, int index) {
+        if (reader.isMissing(index))
+            return null;
+        return function.apply(index);
     }
 }

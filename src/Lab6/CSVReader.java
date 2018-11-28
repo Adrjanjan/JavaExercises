@@ -7,16 +7,19 @@ import java.io.Reader;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class CSVReader {
-    BufferedReader reader;
-    String delimiter;
-    boolean hasHeader;
-    List<String> columnLabels = new ArrayList<>();
-    Map<String, Integer> columnLabelsToInt = new HashMap<>();
-    String[] current;
+    private BufferedReader reader;
+    private String delimiter;
+    private boolean hasHeader;
+    private List<String> columnLabels = new ArrayList<>();
+    private Map<String, Integer> columnLabelsToInt = new HashMap<>();
+    private String[] current;
 
 
     CSVReader(String filename, String delimiter, boolean hasHeader) throws IOException {
@@ -28,19 +31,19 @@ public class CSVReader {
         }
     }
 
-    public CSVReader(String filename, boolean hasHeader) throws IOException {
+    CSVReader(String filename, boolean hasHeader) throws IOException {
         this(filename, ",", hasHeader);
     }
 
-    public CSVReader(String filename, String delimiter) throws IOException {
+    CSVReader(String filename, String delimiter) throws IOException {
         this(filename, delimiter, true);
     }
 
-    public CSVReader(String filename) throws IOException {
+    CSVReader(String filename) throws IOException {
         this(filename, ",", true);
     }
 
-    public CSVReader(Reader reader, String delimiter, boolean hasHeader) throws IOException {
+    CSVReader(Reader reader, String delimiter, boolean hasHeader) throws IOException {
         this.reader = new BufferedReader(reader);
         this.delimiter = delimiter + "(?=([^\"]*\"[^\"]*\")*[^\"]*$)";
         if (hasHeader) {
@@ -80,7 +83,7 @@ public class CSVReader {
         return Integer.parseInt(current[columnLabelsToInt.get(colname)]);
     }
 
-    public int getInt(int columnIndex) {
+    int getInt(int columnIndex) {
         if (columnIndex > getRecordLength()) throw new NullPointerException();
         return Integer.parseInt(current[columnIndex]);
     }
@@ -146,11 +149,13 @@ public class CSVReader {
         return LocalDate.parse(current[columnIndex], DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
-    <T> Optional<T> getIfOk(Function<Integer, T> function, int index) {
-        if (this.isMissing(index))
-            return Optional.empty();
-        return Optional.of(function.apply(index));
+    boolean isHasHeader() {
+        return hasHeader;
     }
 
-
+    <T> T getIfOk(Function<Integer, T> function, int index) {
+        if (this.isMissing(index))
+            return null;
+        return function.apply(index);
+    }
 }
