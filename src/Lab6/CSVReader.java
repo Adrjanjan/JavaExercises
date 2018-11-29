@@ -22,7 +22,7 @@ public class CSVReader {
     private String[] current;
 
 
-    CSVReader(String filename, String delimiter, boolean hasHeader) throws IOException {
+    public CSVReader(String filename, String delimiter, boolean hasHeader) throws IOException {
         reader = new BufferedReader(new FileReader(filename));
         this.delimiter = delimiter + "(?=([^\"]*\"[^\"]*\")*[^\"]*$)";
         this.hasHeader = hasHeader;
@@ -39,7 +39,7 @@ public class CSVReader {
         this(filename, delimiter, true);
     }
 
-    CSVReader(String filename) throws IOException {
+    public CSVReader(String filename) throws IOException {
         this(filename, ",", true);
     }
 
@@ -64,7 +64,7 @@ public class CSVReader {
         }
     }
 
-    boolean next() {
+    public boolean next() {
         String line;
         try {
             line = reader.readLine();
@@ -83,7 +83,7 @@ public class CSVReader {
         return Integer.parseInt(current[columnLabelsToInt.get(colname)]);
     }
 
-    int getInt(int columnIndex) {
+    public int getInt(int columnIndex) {
         if (columnIndex > getRecordLength()) throw new NullPointerException();
         return Integer.parseInt(current[columnIndex]);
     }
@@ -92,7 +92,7 @@ public class CSVReader {
         return current[columnLabelsToInt.get(colname)];
     }
 
-    String get(int columnIndex) {
+    public String get(int columnIndex) {
         if (columnIndex > getRecordLength()) throw new NullPointerException();
         return current[columnIndex];
     }
@@ -101,7 +101,7 @@ public class CSVReader {
         return Double.parseDouble(current[columnLabelsToInt.get(colname)]);
     }
 
-    double getDouble(int columnIndex) {
+    public double getDouble(int columnIndex) {
         if (columnIndex > getRecordLength()) throw new NullPointerException();
         return Double.parseDouble(current[columnIndex]);
     }
@@ -110,7 +110,7 @@ public class CSVReader {
         return Long.parseLong(current[columnLabelsToInt.get(colname)]);
     }
 
-    long getLong(int columnIndex) {
+    public long getLong(int columnIndex) {
         if (columnIndex > getRecordLength()) throw new NullPointerException();
         return Long.parseLong(current[columnIndex]);
     }
@@ -153,7 +153,7 @@ public class CSVReader {
         return hasHeader;
     }
 
-    <T> T getIfOk(Function<Integer, T> function, int index) {
+    public <T> T getIfOk(Function<Integer, T> function, int index) {
         if (this.isMissing(index))
             return null;
         return function.apply(index);
