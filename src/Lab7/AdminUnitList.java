@@ -8,56 +8,100 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AdminUnitList {
     List<AdminUnit> units = new ArrayList<>();
 
+    /**
+     * Reads data from CSV file and parses it to object
+     *
+     * @param filepath  CSV file to read data from
+     * @param delimiter used in csv file
+     * @param hasHeader true if csv has header
+     * @throws IOException when file can't be opened
+     */
+    public void read(String filepath, String delimiter, boolean hasHeader) throws IOException {
+        CSVReader reader = new CSVReader(filepath, delimiter, hasHeader);
 
-    public void read(String filepath) {
-
-        CSVReader reader = null;
-        try {
-            reader = new CSVReader(filepath, ",", true);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-        Map<Long, Long> idToParent = new HashMap<>();
-        Map<Long, Long> parentToId = new HashMap<>();
+        Map<AdminUnit, Long> unitToParentId = new HashMap<>();
+        Map<Long, AdminUnit> idToUnit = new HashMap<>();
+        Map<Long, List<AdminUnit>> parentIdToUnits = new HashMap<>();
 
         AdminUnit tmp;
+        List<AdminUnit> tmp_list;
         while (reader.next()) {
-            int i = 0;
-            idToParent.put(reader.getIfOk(reader::getLong, 0), reader.getIfOk(reader::getLong, 1));
-            idToParent.put(reader.getIfOk(reader::getLong, 1), reader.getIfOk(reader::getLong, 0));
-
-            units.add(new AdminUnit(reader.getIfOk(reader::getLong, i++),
-                            null,
-                            reader.getIfOk(reader::get, i += 2),
-                            reader.getIfOk(reader::getInt, i++),
-                            reader.getIfOk(reader::getInt, i++),
+            int i = 2;
+            tmp = new AdminUnit(null,                                   //parent
+                    reader.getIfOk(reader::get, i++),                   //name
+                    reader.getIfOk(reader::getInt, i++),                //admin_lvl
+                    reader.getIfOk(reader::getInt, i++),                //population
+                    reader.getIfOk(reader::getDouble, i++),             //area
+                    reader.getIfOk(reader::getDouble, i++),             //density
+                    new BoundingBox(reader.getIfOk(reader::getDouble, i++),
                             reader.getIfOk(reader::getDouble, i++),
-                            new BoundingBox(reader.getIfOk(reader::getDouble, i++),
-                                    reader.getIfOk(reader::getDouble, i++),
-                                    reader.getIfOk(reader::getDouble, i++),
-                                    reader.getIfOk(reader::getDouble, i++),
-                                    reader.getIfOk(reader::getDouble, i++),
-                                    reader.getIfOk(reader::getDouble, i++),
-                                    reader.getIfOk(reader::getDouble, i++),
-                                    reader.getIfOk(reader::getDouble, i))
-
-                    )
+                            reader.getIfOk(reader::getDouble, i++),
+                            reader.getIfOk(reader::getDouble, i++),
+                            reader.getIfOk(reader::getDouble, i++),
+                            reader.getIfOk(reader::getDouble, i++),
+                            reader.getIfOk(reader::getDouble, i++),
+                            reader.getIfOk(reader::getDouble, i))
             );
-            i = 0;
+
+            unitToParentId.put(tmp, reader.getIfOk(reader::getLong, 1));
+            idToUnit.put(reader.getIfOk(reader::getLong, 0), tmp);
+            units.add(tmp);
+
+            tmp_list = parentIdToUnits.get(reader.getIfOk(reader::getLong, 1));
+            if (tmp_list == null) tmp_list = new ArrayList<>();
+            tmp_list.add(tmp);
+            parentIdToUnits.put(reader.getIfOk(reader::getLong, 1), tmp_list);
         }
 
-        tmp = null;
+        updateParents(idToUnit, unitToParentId);
+        updateChildren(idToUnit, parentIdToUnits);
+        fixMissingValues();
+    }
+
+    /**
+     * Reads data from CSV file and parses it to object
+     *
+     * @param filepath CSV file to read data from
+     */
+    public void read(String filepath) throws IOException {
+        read(filepath, ",", true);
+    }
+
+    /**
+     * Updates references to children
+     *
+     * @param idToUnit        map to connect id with unit
+     * @param parentIdToUnits map to connect parent's id with its children
+     */
+    private void updateChildren(Map<Long, AdminUnit> idToUnit, Map<Long, List<AdminUnit>> parentIdToUnits) {
+        Map<AdminUnit, Long> unitToId = idToUnit.entrySet()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+
         for (AdminUnit unit : units) {
-            tmp = units.get(idToParent.get(unit.getId()))
-            unit.setParent;
+            unit.setChildren(parentIdToUnits.get(unitToId.get(unit)));
         }
+    }
 
-
+    /**
+     * Updates references to parents
+     *
+     * @param idToUnit       map to connect id with unit
+     * @param unitToParentId map to connect unit with its parent id
+     */
+    private void updateParents(Map<Long, AdminUnit> idToUnit, Map<AdminUnit, Long> unitToParentId) {
+        for (AdminUnit unit : units) {
+            if (unit.getAdmin_level() == 1) {
+                unit.setParent(null);
+                continue;
+            }
+            unit.setParent(idToUnit.get(unitToParentId.get(unit)));
+        }
     }
 
     /**
@@ -77,23 +121,45 @@ public class AdminUnitList {
      * @param limit  - ile (maksymalnie) elementów wypisać
      */
     void list(PrintStream out, int offset, int limit) {
-
-
+        units.stream().skip(offset).limit(limit).forEach(out::println);
     }
 
-
-    public void fixMissingLevel(int level) {
-
-
+    private void fixMissingValues() {
+        for (AdminUnit unit : units) {
+            if (unit.density == null) {
+                unit.fixMissingValues();
+            }
+        }
     }
 
-    public List<AdminUnit> selectNameMatches(String regex) {
+    /**
+     * Zwraca nową listę zawierającą te obiekty AdminUnit, których nazwa pasuje do wzorca
+     *
+     * @param pattern - wzorzec dla nazwy
+     * @param regex   - jeśli regex=true, użyj finkcji String matches(); jeśli false użyj funkcji contains()
+     * @return podzbiór elementów, których nazwy spełniają kryterium wyboru
+     */
+    AdminUnitList selectByName(String pattern, boolean regex) {
+        AdminUnitList ret = new AdminUnitList();
 
+        if (regex) {
+            for (AdminUnit unit : units) {
+                if (unit.getName().matches(pattern)) {
+                    ret.units.add(unit);
+                }
+            }
+        } else {
+            for (AdminUnit unit : units) {
+                if (unit.getName().contains(pattern)) {
+                    ret.units.add(unit);
+                }
+            }
+        }
+
+        return ret;
     }
 
-    public List<AdminUnit> selectInside(String regex) {
-
+    public AdminUnit getUnit(int index) {
+        return units.get(index);
     }
-
-
 }
