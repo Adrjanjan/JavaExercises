@@ -38,15 +38,16 @@ public class AdminUnitList {
                     reader.getIfOk(reader::getInt, i++),                //population
                     reader.getIfOk(reader::getDouble, i++),             //area
                     reader.getIfOk(reader::getDouble, i++),             //density
-                    new BoundingBox(reader.getIfOk(reader::getDouble, i++),
-                            reader.getIfOk(reader::getDouble, i++),
-                            reader.getIfOk(reader::getDouble, i++),
-                            reader.getIfOk(reader::getDouble, i++),
-                            reader.getIfOk(reader::getDouble, i++),
-                            reader.getIfOk(reader::getDouble, i++),
-                            reader.getIfOk(reader::getDouble, i++),
-                            reader.getIfOk(reader::getDouble, i))
-            );
+                    new BoundingBox()
+                            .addPoint(reader.getIfOk(reader::getDouble, i++),
+                                    reader.getIfOk(reader::getDouble, i++))
+                            .addPoint(reader.getIfOk(reader::getDouble, i++),
+                                    reader.getIfOk(reader::getDouble, i++))
+                            .addPoint(reader.getIfOk(reader::getDouble, i++),
+                                    reader.getIfOk(reader::getDouble, i++))
+                            .addPoint(reader.getIfOk(reader::getDouble, i++),
+                                    reader.getIfOk(reader::getDouble, i)));
+
 
             unitToParentId.put(tmp, reader.getIfOk(reader::getLong, 1));
             idToUnit.put(reader.getIfOk(reader::getLong, 0), tmp);

@@ -1,55 +1,132 @@
 package Lab7;
 
 public class BoundingBox {
-    private Point p1, p2, p3, p4;
+    double xmin, ymin, xmax, ymax;
+    boolean isEmpty = true;
 
-    BoundingBox(Double x1, Double y1, Double x2, Double y2, Double x3, Double y3, Double x4, Double y4) {
-        this.p1 = new Point(x1, y1);
-        this.p2 = new Point(x2, y2);
-        this.p3 = new Point(x3, y3);
-        this.p4 = new Point(x4, y4);
+    public BoundingBox() {
     }
 
-//    public void addPoint(Double x, Double y) {
-//
-//    }
-//
-//    public boolean intersects(BoundingBox other) {
-//
-//
-//    }
-//
-//    public boolean contains(BoundingBox other) {
-//
-//
-//    }
+    public BoundingBox(double xmin, double ymin, double xmax, double ymax) {
+        this.xmin = xmin = xmin;
+        this.ymin = ymin = ymin;
+        this.xmax = xmax = xmax;
+        this.ymax = ymax = ymax;
+        isEmpty = false;
 
-
-    @Override
-    public String toString() {
-        return "(" +
-                "p1=" + p1 +
-                ", p2=" + p2 +
-                ", p3=" + p3 +
-                ", p4=" + p4 +
-                ')';
     }
 
-//    Double area() {
-//        return (p1.x*p2.y-p2.x*p1.y) + (p2.x*p3.y - p3.x*p2.y) + (p3.x*p4.y - p4.x*p3.y) + (p4.x*p1.y - p1.x*p4.y);
-//    }
-
-    class Point {
-        Double x, y;
-
-        Point(Double x, Double y) {
-            this.x = x;
-            this.y = y;
+    /**
+     * Powiększa BB tak, aby zawierał punkt (x,y)
+     *
+     * @param x - współrzędna x
+     * @param y - współrzędna y
+     */
+    BoundingBox addPoint(double x, double y) {
+        if (x < xmin || y < ymin) {
+            xmin = x;
+            ymin = y;
+            isEmpty = false;
+        } else if (x > xmax || y > ymax) {
+            xmin = x;
+            ymin = y;
+            isEmpty = false;
         }
 
-        @Override
-        public String toString() {
-            return "(" + x + ", " + y + ')';
-        }
+        return this;
     }
+
+    /**
+     * Sprawdza, czy BB zawiera punkt (x,y)
+     *
+     * @param x - współrzędna x
+     * @param y - współrzędna y
+     * @return true if inside
+     */
+    boolean contains(double x, double y) {
+        if (isEmpty) return false;
+        return x <= xmax && x >= xmin && y <= ymax && y >= ymin;
+    }
+
+    /**
+     * Sprawdza czy dany BB zawiera bb
+     *
+     * @param bb BoundingBox to check if is in this object
+     * @return true if this contains bb
+     */
+    boolean contains(BoundingBox bb) {
+        if (isEmpty) return false;
+
+        return bb.xmin >= this.xmax && bb.ymin >= this.ymax && bb.ymax <= this.ymin && bb.xmax <= this.xmin;
+    }
+
+    /**
+     * Sprawdza, czy dany BB przecina się z bb
+     *
+     * @param bb another BoundingBox
+     * @return tru ib this and bb intersect
+     */
+    boolean intersects(BoundingBox bb) {
+        return !(this.ymin > bb.ymax) && !(bb.ymin > this.ymax) && !(this.xmax < bb.xmin) && !(bb.xmax < this.xmin);
+
+    }
+
+    /**
+     * Powiększa rozmiary tak, aby zawierał bb oraz poprzednią wersję this
+     *
+     * @param bb BoundingBox used to resise this
+     * @return bigger BoundingBox
+     */
+    BoundingBox add(BoundingBox bb) {
+        xmin = xmin < bb.xmin ? xmin : bb.xmin;
+        ymin = ymin < bb.ymin ? ymin : bb.ymin;
+        xmax = xmax > bb.xmax ? xmax : bb.xmax;
+        ymax = ymax > bb.ymax ? ymax : bb.ymax;
+        return this;
+    }
+
+    /**
+     * Sprawdza czy BB jest pusty
+     *
+     * @return true if this  object is empty
+     */
+    boolean isEmpty() {
+        return isEmpty;
+    }
+
+    /**
+     * Oblicza i zwraca współrzędną x środka
+     *
+     * @return if !isEmpty() współrzędna x środka else wyrzuca wyjątek
+     * (sam dobierz typ)
+     */
+    double getCenterX() throws Exception {
+        if (isEmpty) throw new Exception("This Bounding box is empty");
+        return (xmin + xmax) / 2;
+    }
+
+    /**
+     * Oblicza i zwraca współrzędną y środka
+     *
+     * @return if !isEmpty() współrzędna y środka else wyrzuca wyjątek
+     * (sam dobierz typ)
+     */
+    double getCenterY() throws Exception {
+        if (isEmpty) throw new Exception("This Bounding box is empty");
+        return (ymin + ymax) / 2;
+    }
+    //TODO haversine + testy
+
+    /**
+     * Oblicza odległość pomiędzy środkami this bounding box oraz bbx
+     *
+     * @param bbx prostokąt, do którego liczona jest odległość
+     * @return if !isEmpty odległość, else wyrzuca wyjątek lub zwraca maksymalną możliwą wartość double
+     * Ze względu na to, że są to współrzędne geograficzne, zamiast odległosci euklidesowej możesz użyć wzoru haversine
+     * (ang. haversine formula)
+     */
+    double distanceTo(BoundingBox bbx) {
+        throw new RuntimeException("Not implemented");
+    }
+
 }
