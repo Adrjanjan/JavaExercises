@@ -163,4 +163,25 @@ public class AdminUnitList {
     public AdminUnit getUnit(int index) {
         return units.get(index);
     }
+
+    /**
+     * Zwraca listę jednostek sąsiadujących z jendostką unit na tym samym poziomie hierarchii admin_level.
+     * Czyli sąsiadami wojweództw są województwa, powiatów - powiaty, gmin - gminy, miejscowości - inne miejscowości
+     *
+     * @param unit        - jednostka, której sąsiedzi mają być wyznaczeni
+     * @param maxdistance - parametr stosowany wyłącznie dla miejscowości, maksymalny promień odległości od środka unit,
+     *                    w którym mają sie znaleźć punkty środkowe BoundingBox sąsiadów
+     * @return lista wypełniona sąsiadami
+     */
+    AdminUnitList getNeighbors(AdminUnit unit, double maxdistance) {
+        AdminUnitList neighbours = new AdminUnitList();
+        for (AdminUnit neighbour : units) {
+            if (!unit.admin_level.equals(neighbour.admin_level)) continue;
+            if (!unit.boundingBox.intersects(neighbour.boundingBox)) continue;
+            if (maxdistance < unit.boundingBox.distanceTo(neighbour.boundingBox)) continue;
+            neighbours.units.add(neighbour);
+        }
+        return neighbours;
+    }
+
 }

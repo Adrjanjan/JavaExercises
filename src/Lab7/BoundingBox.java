@@ -1,8 +1,8 @@
 package Lab7;
 
 public class BoundingBox {
-    double xmin, ymin, xmax, ymax;
-    boolean isEmpty = true;
+    private double xmin, ymin, xmax, ymax;
+    private boolean isEmpty = true;
 
     public BoundingBox() {
     }
@@ -22,7 +22,8 @@ public class BoundingBox {
      * @param x - współrzędna x
      * @param y - współrzędna y
      */
-    BoundingBox addPoint(double x, double y) {
+    BoundingBox addPoint(Double x, Double y) {
+        if (x == null || y == null) return this;
         if (x < xmin || y < ymin) {
             xmin = x;
             ymin = y;
@@ -115,7 +116,7 @@ public class BoundingBox {
         if (isEmpty) throw new Exception("This Bounding box is empty");
         return (ymin + ymax) / 2;
     }
-    //TODO haversine + testy
+    //TODO testy
 
     /**
      * Oblicza odległość pomiędzy środkami this bounding box oraz bbx
@@ -126,7 +127,36 @@ public class BoundingBox {
      * (ang. haversine formula)
      */
     double distanceTo(BoundingBox bbx) {
-        throw new RuntimeException("Not implemented");
+        final double R = 6372.8; // In kilometers
+        double lat1 = 0;
+        double lon1 = 0;
+        double lat2 = 0;
+        double lon2 = 0;
+        try {
+            lat1 = bbx.getCenterX();
+            lon1 = bbx.getCenterY();
+            lat2 = this.getCenterX();
+            lon2 = this.getCenterY();
+        } catch (Exception e) {
+            return Double.MAX_VALUE;
+        }
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+
+        double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1) * Math.cos(lat2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        return R * c;
     }
 
+    @Override
+    public String toString() {
+        return "BoundingBox{" +
+                "xmin=" + xmin +
+                ", ymin=" + ymin +
+                ", xmax=" + xmax +
+                ", ymax=" + ymax +
+                '}';
+    }
 }

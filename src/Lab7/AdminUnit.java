@@ -4,7 +4,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminUnit {
+public class AdminUnit extends BoundingBox {
     AdminUnit parent;
     String name;
     Integer admin_level;
