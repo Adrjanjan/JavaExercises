@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class AdminUnitList {
-    List<AdminUnit> units = new ArrayList<>();
+    private List<AdminUnit> units = new ArrayList<>();
 
     /**
      * Reads data from CSV file and parses it to object
@@ -176,10 +176,11 @@ public class AdminUnitList {
     AdminUnitList getNeighbors(AdminUnit unit, double maxdistance) {
         AdminUnitList neighbours = new AdminUnitList();
         for (AdminUnit neighbour : units) {
-            if (!unit.admin_level.equals(neighbour.admin_level)) continue;
-            if (!unit.boundingBox.intersects(neighbour.boundingBox)) continue;
-            if (maxdistance < unit.boundingBox.distanceTo(neighbour.boundingBox)) continue;
-            neighbours.units.add(neighbour);
+            if (!unit.admin_level.equals(neighbour.admin_level) || neighbour.equals(unit)) continue;
+            if (unit.boundingBox.intersects(neighbour.boundingBox) || maxdistance > unit.boundingBox.distanceTo(neighbour.boundingBox)) {
+                System.out.println(neighbour.getName() + unit.boundingBox.distanceTo(neighbour.boundingBox));
+                neighbours.units.add(neighbour);
+            }
         }
         return neighbours;
     }

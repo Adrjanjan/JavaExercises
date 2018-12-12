@@ -39,9 +39,16 @@ public class AdminUnitListTest {
         AdminUnitList unitList = new AdminUnitList();
         unitList.read("admin-units.csv");
 
-        AdminUnitList slaskie = unitList.selectByName("województwo śląskie", true);
+        AdminUnitList slaskie = unitList.selectByName("Katowice", true);
 
         System.out.println(slaskie.getUnit(0));
-        unitList.getNeighbors(slaskie.getUnit(0), 15).print_list(System.out);
+
+
+//        double t1 = System.nanoTime()/1e6;
+        AdminUnitList neigh = unitList.getNeighbors(slaskie.getUnit(0), 25);
+//        double t2 = System.nanoTime()/1e6;
+//        System.out.printf(Locale.US,"t2-t1=%f\n",t2-t1);
+
+        neigh.print_list(System.out);
     }
 }
