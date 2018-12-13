@@ -24,14 +24,17 @@ public class BoundingBox {
      */
     BoundingBox addPoint(Double x, Double y) {
         if (x == null || y == null) return this;
-        if (x < xmin || y < ymin) {
+        if (!isEmpty()) {
+            xmin = xmin < x ? xmin : x;
+            ymin = ymin < y ? ymin : y;
+            xmax = xmax > x ? xmax : x;
+            ymax = ymax > y ? ymax : y;
+            isEmpty = false;
+        } else {
             xmin = x;
             ymin = y;
-            isEmpty = false;
-        } else if (x > xmax || y > ymax) {
-            xmin = x;
-            ymin = y;
-            isEmpty = false;
+            xmax = x;
+            ymax = y;
         }
 
         return this;
@@ -116,7 +119,6 @@ public class BoundingBox {
         if (isEmpty) throw new Exception("This Bounding box is empty");
         return (ymin + ymax) / 2;
     }
-    //TODO testy
 
     /**
      * Oblicza odległość pomiędzy środkami this bounding box oraz bbx

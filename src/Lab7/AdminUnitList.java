@@ -178,7 +178,6 @@ public class AdminUnitList {
         for (AdminUnit neighbour : units) {
             if (!unit.admin_level.equals(neighbour.admin_level) || neighbour.equals(unit)) continue;
             if (unit.boundingBox.intersects(neighbour.boundingBox) || maxdistance > unit.boundingBox.distanceTo(neighbour.boundingBox)) {
-                System.out.println(neighbour.getName() + unit.boundingBox.distanceTo(neighbour.boundingBox));
                 neighbours.units.add(neighbour);
             }
         }
