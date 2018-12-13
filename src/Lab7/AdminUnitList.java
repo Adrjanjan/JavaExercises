@@ -32,22 +32,20 @@ public class AdminUnitList {
         List<AdminUnit> tmp_list;
         while (reader.next()) {
             int i = 2;
-            tmp = new AdminUnit(null,                                   //parent
-                    reader.getIfOk(reader::get, i++),                   //name
-                    reader.getIfOk(reader::getInt, i++),                //admin_lvl
-                    reader.getIfOk(reader::getInt, i++),                //population
-                    reader.getIfOk(reader::getDouble, i++),             //area
-                    reader.getIfOk(reader::getDouble, i++),             //density
-                    new BoundingBox()
-                            .addPoint(reader.getIfOk(reader::getDouble, i++),
-                                    reader.getIfOk(reader::getDouble, i++))
-                            .addPoint(reader.getIfOk(reader::getDouble, i++),
-                                    reader.getIfOk(reader::getDouble, i++))
-                            .addPoint(reader.getIfOk(reader::getDouble, i++),
-                                    reader.getIfOk(reader::getDouble, i++))
-                            .addPoint(reader.getIfOk(reader::getDouble, i++),
-                                    reader.getIfOk(reader::getDouble, i)));
+            tmp = new AdminUnit(null,                                //parent
+                    reader.getIfOk(reader::get, i),                   //name
+                    reader.getIfOk(reader::getInt, i + 1),                //admin_lvl
+                    reader.getIfOk(reader::getInt, i + 2),                //population
+                    reader.getIfOk(reader::getDouble, i + 3),             //area
+                    reader.getIfOk(reader::getDouble, i + 4),             //density
+                    new BoundingBox());
 
+            if (!reader.isMissing("x1")) {
+                tmp.boundingBox.addPoint(reader.getDouble("x1"), reader.getDouble("y1"));
+                tmp.boundingBox.addPoint(reader.getDouble("x2"), reader.getDouble("y2"));
+                tmp.boundingBox.addPoint(reader.getDouble("x3"), reader.getDouble("y3"));
+                tmp.boundingBox.addPoint(reader.getDouble("x4"), reader.getDouble("y4"));
+            }
 
             unitToParentId.put(tmp, reader.getIfOk(reader::getLong, 1));
             idToUnit.put(reader.getIfOk(reader::getLong, 0), tmp);

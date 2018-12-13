@@ -1,7 +1,7 @@
 package Lab7;
 
 public class BoundingBox {
-    private double xmin, ymin, xmax, ymax;
+    private double xmin, ymin, xmax = Double.MAX_VALUE, ymax = Double.MAX_VALUE;
     private boolean isEmpty = true;
 
     BoundingBox() {
@@ -24,19 +24,18 @@ public class BoundingBox {
      */
     BoundingBox addPoint(Double x, Double y) {
         if (x == null || y == null) return this;
-        if (!isEmpty()) {
+        if (isEmpty()) {
+            this.xmin = x;
+            this.ymin = y;
+            this.xmax = x;
+            this.ymax = y;
+            isEmpty = false;
+        } else {
             xmin = xmin < x ? xmin : x;
             ymin = ymin < y ? ymin : y;
             xmax = xmax > x ? xmax : x;
             ymax = ymax > y ? ymax : y;
-            isEmpty = false;
-        } else {
-            xmin = x;
-            ymin = y;
-            xmax = x;
-            ymax = y;
         }
-
         return this;
     }
 

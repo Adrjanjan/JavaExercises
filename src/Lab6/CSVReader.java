@@ -97,7 +97,7 @@ public class CSVReader {
         return current[columnIndex];
     }
 
-    double getDouble(String colname) {
+    public double getDouble(String colname) {
         return Double.parseDouble(current[columnLabelsToInt.get(colname)]);
     }
 
@@ -123,11 +123,11 @@ public class CSVReader {
         return current.length;
     }
 
-    boolean isMissing(int columnIndex) {
+    public boolean isMissing(int columnIndex) {
         return columnIndex >= current.length || current[columnIndex].isEmpty();
     }
 
-    boolean isMissing(String columnLabel) {
+    public boolean isMissing(String columnLabel) {
         return isMissing(columnLabelsToInt.get(columnLabel));
     }
 
