@@ -4,14 +4,12 @@ import Lab6.CSVReader;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class AdminUnitList {
-    private List<AdminUnit> units = new ArrayList<>();
+    List<AdminUnit> units = new ArrayList<>();
 
     /**
      * Reads data from CSV file and parses it to object
@@ -180,6 +178,109 @@ public class AdminUnitList {
             }
         }
         return neighbours;
+    }
+
+
+    /**
+     * Sortuje daną listę jednostek (in place = w miejscu)
+     *
+     * @return this
+     */
+    AdminUnitList sortInplaceByName() {
+        class AdminUnitComparator implements Comparator<AdminUnit> {
+            @Override
+            public int compare(AdminUnit leftUnit, AdminUnit rightUnit) {
+                return leftUnit.name.compareTo(rightUnit.name);
+            }
+        }
+        units.sort(new AdminUnitComparator());
+        return this;
+    }
+
+    AdminUnitList sortInplaceByArea() {
+        units.sort(new Comparator<AdminUnit>() {
+            @Override
+            public int compare(AdminUnit leftUnit, AdminUnit rightUnit) {
+                return leftUnit.area.compareTo(rightUnit.area);
+            }
+        });
+        return this;
+    }
+
+    AdminUnitList sortInplacePopulation() {
+        units.sort((leftUnit, rightUnit) -> leftUnit.population.compareTo(rightUnit.population));
+        return this;
+    }
+
+    /**
+     * Sorts in place this AdminUnitList
+     *
+     * @param cmp comparator
+     * @return this
+     */
+    AdminUnitList sortInplace(Comparator<AdminUnit> cmp) {
+        units.sort(cmp);
+        return this;
+    }
+
+    /**
+     * Sorts copy of this Admin Unit List
+     *
+     * @param cmp comparator
+     * @return sorted copy of this
+     */
+    AdminUnitList sort(Comparator<AdminUnit> cmp) {
+        AdminUnitList copiedUnits = new AdminUnitList();
+        copiedUnits.units = new ArrayList<>(this.units);
+        copiedUnits.units.sort(cmp);
+        return copiedUnits;
+    }
+
+    /**
+     * @param pred referencja do interfejsu Predicate
+     * @return nową listę, na której pozostawiono tylko te jednostki,
+     * dla których metoda test() zwraca true
+     */
+    AdminUnitList filter(Predicate<AdminUnit> pred) {
+        AdminUnitList newUnits = new AdminUnitList();
+        for (AdminUnit unit : units) {
+            if (pred.test(unit)) {
+                newUnits.units.add(unit);
+            }
+        }
+        return newUnits;
+    }
+
+    AdminUnitList filter(Predicate<AdminUnit> pred, int limit) {
+        AdminUnitList newUnits = new AdminUnitList();
+        for (AdminUnit unit : units) {
+            if (pred.test(unit)) {
+                newUnits.units.add(unit);
+                if (newUnits.units.size() == limit) break;
+            }
+        }
+        return newUnits;
+    }
+
+    /**
+     * Zwraca co najwyżej limit elementów spełniających pred począwszy od offset
+     * Offest jest obliczany po przefiltrowaniu
+     *
+     * @param pred   - predykat
+     * @param offset - od którego elementu
+     * @param limit  - maksymalna liczba elementów
+     * @return nową listę
+     */
+    AdminUnitList filter(Predicate<AdminUnit> pred, int offset, int limit) {
+        AdminUnitList newUnits = new AdminUnitList();
+        for (AdminUnit unit : units) {
+            if (offset-- > 0) continue;
+            if (pred.test(unit)) {
+                newUnits.units.add(unit);
+                if (newUnits.units.size() == limit) break;
+            }
+        }
+        return newUnits;
     }
 
 }
