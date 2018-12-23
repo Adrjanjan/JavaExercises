@@ -11,7 +11,7 @@ public class DrawPanel extends JPanel {
     private Image backgroundImg;
 
     DrawPanel() {
-        setBackground(new Color(0, 0, 50));
+        this(new Color(0 , 0 , 50));
     }
 
     public DrawPanel(Image backgroundImg) {
@@ -24,6 +24,8 @@ public class DrawPanel extends JPanel {
 
     @Override
     public void paintComponent(Graphics g) {
+        setBackground(backgroundColor);
+        g.drawImage(backgroundImg, 0, 0, getWidth(), getHeight(), this);
         super.paintComponent(g);
         for (XmasShape shape : shapes) {
             shape.draw((Graphics2D) g);
