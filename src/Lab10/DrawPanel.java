@@ -7,25 +7,21 @@ import java.util.List;
 
 public class DrawPanel extends JPanel {
     private List<XmasShape> shapes = new ArrayList<>();
-    private Color backgroundColor;
-    private Image backgroundImg;
 
     DrawPanel() {
         this(new Color(0 , 0 , 50));
     }
 
-    public DrawPanel(Image backgroundImg) {
-        this.backgroundImg = backgroundImg;
+    public DrawPanel(Color backgroundColor) {
+        setBackground(backgroundColor);
     }
 
-    public DrawPanel(Color backgroundColor) {
-        this.backgroundColor = backgroundColor;
+    public void drawImage(Graphics g, Image img) {
+        g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
     }
 
     @Override
     public void paintComponent(Graphics g) {
-        setBackground(backgroundColor);
-        g.drawImage(backgroundImg, 0, 0, getWidth(), getHeight(), this);
         super.paintComponent(g);
         for (XmasShape shape : shapes) {
             shape.draw((Graphics2D) g);
