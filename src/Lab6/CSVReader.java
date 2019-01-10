@@ -79,7 +79,7 @@ public class CSVReader {
         return true;
     }
 
-    int getInt(String colname) {
+    public int getInt(String colname) {
         return Integer.parseInt(current[columnLabelsToInt.get(colname)]);
     }
 
@@ -88,7 +88,7 @@ public class CSVReader {
         return Integer.parseInt(current[columnIndex]);
     }
 
-    String get(String colname) {
+    public String get(String colname) {
         return current[columnLabelsToInt.get(colname)];
     }
 
