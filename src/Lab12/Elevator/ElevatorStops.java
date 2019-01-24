@@ -1,10 +1,14 @@
 package Lab12.Elevator;
 
-public class ElevatorStops {static final int FLOORS = 10;
+public class ElevatorStops {
+    static final int FLOORS = 10;
     static final int MIN_FLOOR = 0;
     static final int MAX_FLOOR=FLOORS-1;
     boolean stopsDown[] = new boolean[FLOORS];
     boolean stopsUp[] = new boolean[FLOORS];
+    private final static ElevatorStops instance = new ElevatorStops();
+
+    private ElevatorStops(){}
 
 
     void setLiftStopUp(int floor){
@@ -55,8 +59,7 @@ public class ElevatorStops {static final int FLOORS = 10;
         return stopsUp[floor];
     }
 
-    //TODO
     static ElevatorStops get(){
-        return ???
+        return instance;
     }
 }

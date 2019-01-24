@@ -25,12 +25,12 @@ public class ExternalPanelsAgent extends Thread{
         for(;;){
             ExternalCall ec = null;
             try {
-                ec = ec = input.take();
+                ec = input.take();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             // ignorujemy wezwanie na piętro, na którym winda się znajduje
-            if(ec.atFloor==elevatorCar.getFloor())continue;
+            if(ec.atFloor==elevatorCar.getFloor()) continue;
             // dodajemy do jednej z tablic zgłoszeń
             if(ec.directionUp){
                 ElevatorStops.get().setLiftStopUp(ec.atFloor);
